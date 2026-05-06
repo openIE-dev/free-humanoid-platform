@@ -1,0 +1,26 @@
+SPDX-License-Identifier: Apache-2.0
+
+Free Humanoid Platform — Software License
+==========================================
+
+The software artifacts in this repository (firmware, control software,
+simulation models in code form, build tooling, and any other source code
+not covered by the LICENSE-HARDWARE, LICENSE-DATA, or LICENSE-DOCS files)
+are licensed under the Apache License, Version 2.0.
+
+Canonical text:
+  https://www.apache.org/licenses/LICENSE-2.0
+  https://spdx.org/licenses/Apache-2.0.html    (SPDX entry)
+
+Apache-2.0 is permissive with explicit patent grant. The patent grant is
+load-bearing for the platform's defensive posture — every contributor's
+patents are licensed to every user, irrevocably, for use of the contributed
+code. This is the recommended license for open robotics software per
+broad community consensus.
+
+NOTE (release blocker): the full canonical text of Apache-2.0 must be
+inlined into this file before any public push. The header above is a
+working placeholder. The full text is approximately 11 KB and is required
+both by the license itself and by SPDX best practice.
+
+Copyright (c) Free Humanoid Platform Contributors.

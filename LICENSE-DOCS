@@ -1,0 +1,25 @@
+SPDX-License-Identifier: CC-BY-SA-4.0
+
+Free Humanoid Platform — Documentation License
+==============================================
+
+The documentation in this repository (README.md, ARCHITECTURE.md,
+CONTRIBUTING.md, design notes, manuals, and any other prose / Markdown /
+prose-with-diagrams artifacts not covered by the LICENSE-HARDWARE,
+LICENSE-SOFTWARE, or LICENSE-DATA files) is licensed under the Creative
+Commons Attribution-ShareAlike 4.0 International License (CC-BY-SA-4.0).
+
+Canonical text:
+  https://creativecommons.org/licenses/by-sa/4.0/legalcode
+  https://spdx.org/licenses/CC-BY-SA-4.0.html    (SPDX entry)
+
+Attribution required, derivatives must share alike. Aligns with the
+strongly-reciprocal posture of the hardware license while keeping
+documentation citable in academic and journalistic contexts.
+
+NOTE (release blocker): the full canonical text of CC-BY-SA-4.0 must be
+inlined into this file before any public push. The header above is a
+working placeholder. The full text is approximately 18 KB and is required
+both by the license itself and by SPDX best practice.
+
+Copyright (c) Free Humanoid Platform Contributors.

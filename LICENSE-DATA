@@ -1,0 +1,36 @@
+SPDX-License-Identifier: CC0-1.0
+
+Free Humanoid Platform — Descriptor and Data License
+====================================================
+
+The descriptors, datasets, BOM data, training data pointers, and any
+machine-readable structured data in this repository (everything in
+`descriptor/`, `datasets/`, and any other JSON/CSV/YAML/JSONL artifact not
+covered by the LICENSE-HARDWARE, LICENSE-SOFTWARE, or LICENSE-DOCS files)
+is dedicated to the public domain under the Creative Commons CC0 1.0
+Universal Public Domain Dedication.
+
+Canonical text:
+  https://creativecommons.org/publicdomain/zero/1.0/legalcode
+  https://spdx.org/licenses/CC0-1.0.html    (SPDX entry)
+
+CC0 is the strongest possible "you cannot enclose this" signal. The
+descriptor is the source-of-truth artifact for the platform; placing it in
+the public domain matches the OpenLoco substrate's CC0 stance and ensures
+that the *description* of the platform — which is the load-bearing
+defensive-publication artifact — cannot be re-enclosed.
+
+The CC0 dedication applies to:
+  - descriptor/free-humanoid.udd.json (the OpenLoco UDD descriptor)
+  - any future variant descriptors
+  - the BOM data inside or derived from descriptors
+  - the dataset pointers and any dataset metadata
+  - anything else under datasets/
+
+NOTE (release blocker): the full canonical text of CC0-1.0 must be inlined
+into this file before any public push. The header above is a working
+placeholder. The full text is approximately 7 KB and is required both by
+the dedication itself and by SPDX best practice.
+
+To the extent permitted by law, the contributors have waived all copyright
+and related rights to the data and descriptors covered by this file.

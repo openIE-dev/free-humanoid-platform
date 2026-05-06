@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "meta": {
+    "name": "free_humanoid",
+    "version": "0.0.1",
+    "units_length": "Metre",
+    "author": "Free Humanoid Platform Contributors",
+    "description": "Free Humanoid Platform — the seventeenth OpenLoco morphology. 33-DoF bipedal humanoid scaffold (~1.6 m, ~50 kg target). Hybrid actuator distribution: cycloidal at hip/knee (corpus: sumitomo-cyclo 1937), QDD at ankle (corpus: mini-cheetah 2019), harmonic-drive at shoulder/elbow (corpus: honda-e0 1986), tendon-driven at hands/wrist (corpus: shadow-dexterous-hand 2002). Kinematic topology shielded by the WABOT-1 (1973) → Honda E/P (1986-1997) → ASIMO/HUBO/HRP/PAL/Valkyrie/Robonaut chain. Safety supervisor: MathGround-style Simplex (corpus: sherman-simplex-architecture 1995, control-barrier-functions 2007). All masses and inertias are scaffold placeholders — iterate against physical CAD before any build.",
+    "generator": "free-humanoid-platform-scaffold",
+    "morphology_family": "humanoid_bipedal",
+    "corpus_anchors": [
+      "wabot-1",
+      "honda-p2",
+      "asimo",
+      "hrp-2",
+      "cassie-osu",
+      "berkeley-humanoid",
+      "sumitomo-cyclo",
+      "mini-cheetah",
+      "shadow-dexterous-hand",
+      "pisa-iit-softhand",
+      "sherman-simplex-architecture",
+      "control-barrier-functions"
+    ]
+  },
+  "robot": {
+    "links": [
+      { "name": "pelvis", "mass_kg": 8.000, "inertia": [8.0e-2, 6.0e-2, 4.0e-2, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_pelvis_v0" } },
+      { "name": "torso", "mass_kg": 14.000, "inertia": [2.5e-1, 2.0e-1, 1.0e-1, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_torso_v0" } },
+      { "name": "head",  "mass_kg": 3.500, "inertia": [1.5e-2, 1.5e-2, 1.0e-2, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_head_v0" } },
+      { "name": "neck_yaw_link",   "mass_kg": 0.30, "inertia": [4.0e-4, 4.0e-4, 4.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_neck_yaw_v0" } },
+
+      { "name": "L_clavicle",  "mass_kg": 0.50, "inertia": [4.0e-4, 4.0e-4, 4.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_clavicle_v0" } },
+      { "name": "L_shoulder_pitch_housing", "mass_kg": 0.80, "inertia": [8.0e-4, 8.0e-4, 6.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "L_shoulder_roll_housing",  "mass_kg": 0.80, "inertia": [8.0e-4, 8.0e-4, 6.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "L_upper_arm",  "mass_kg": 1.50, "inertia": [3.0e-3, 3.0e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_arm_segment__length-300" } },
+      { "name": "L_elbow_housing",   "mass_kg": 0.60, "inertia": [6.0e-4, 6.0e-4, 4.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "L_forearm",    "mass_kg": 1.20, "inertia": [2.5e-3, 2.5e-3, 8.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_arm_segment__length-260" } },
+      { "name": "L_wrist_pitch_link", "mass_kg": 0.20, "inertia": [1.5e-4, 1.5e-4, 1.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_tendon_block__channels-3" } },
+      { "name": "L_wrist_roll_link",  "mass_kg": 0.20, "inertia": [1.5e-4, 1.5e-4, 1.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_tendon_block__channels-3" } },
+      { "name": "L_hand", "mass_kg": 0.45, "inertia": [3.0e-4, 3.0e-4, 2.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_hand_underactuated_v0" } },
+
+      { "name": "R_clavicle",  "mass_kg": 0.50, "inertia": [4.0e-4, 4.0e-4, 4.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_clavicle_v0" } },
+      { "name": "R_shoulder_pitch_housing", "mass_kg": 0.80, "inertia": [8.0e-4, 8.0e-4, 6.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "R_shoulder_roll_housing",  "mass_kg": 0.80, "inertia": [8.0e-4, 8.0e-4, 6.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "R_upper_arm",  "mass_kg": 1.50, "inertia": [3.0e-3, 3.0e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_arm_segment__length-300" } },
+      { "name": "R_elbow_housing",   "mass_kg": 0.60, "inertia": [6.0e-4, 6.0e-4, 4.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_harmonic_drive__ratio-100__motor-bldc-100w" } },
+      { "name": "R_forearm",    "mass_kg": 1.20, "inertia": [2.5e-3, 2.5e-3, 8.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_arm_segment__length-260" } },
+      { "name": "R_wrist_pitch_link", "mass_kg": 0.20, "inertia": [1.5e-4, 1.5e-4, 1.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_tendon_block__channels-3" } },
+      { "name": "R_wrist_roll_link",  "mass_kg": 0.20, "inertia": [1.5e-4, 1.5e-4, 1.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_tendon_block__channels-3" } },
+      { "name": "R_hand", "mass_kg": 0.45, "inertia": [3.0e-4, 3.0e-4, 2.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_hand_underactuated_v0" } },
+
+      { "name": "L_hip_yaw_housing",   "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "L_hip_roll_housing",  "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "L_hip_pitch_housing", "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "L_thigh", "mass_kg": 4.50, "inertia": [3.5e-2, 3.5e-2, 8.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_leg_segment__length-380" } },
+      { "name": "L_knee_housing", "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "L_shank", "mass_kg": 3.00, "inertia": [3.0e-2, 3.0e-2, 5.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_leg_segment__length-380" } },
+      { "name": "L_ankle_pitch_housing", "mass_kg": 0.70, "inertia": [7.0e-4, 7.0e-4, 5.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_qdd__ratio-9__motor-bldc-150w" } },
+      { "name": "L_ankle_roll_housing",  "mass_kg": 0.70, "inertia": [7.0e-4, 7.0e-4, 5.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_qdd__ratio-9__motor-bldc-150w" } },
+      { "name": "L_foot",  "mass_kg": 1.20, "inertia": [3.0e-3, 5.0e-3, 5.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_foot_v0" } },
+
+      { "name": "R_hip_yaw_housing",   "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "R_hip_roll_housing",  "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "R_hip_pitch_housing", "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "R_thigh", "mass_kg": 4.50, "inertia": [3.5e-2, 3.5e-2, 8.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_leg_segment__length-380" } },
+      { "name": "R_knee_housing", "mass_kg": 1.40, "inertia": [1.5e-3, 1.5e-3, 1.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_cycloidal__ratio-50__motor-bldc-200w" } },
+      { "name": "R_shank", "mass_kg": 3.00, "inertia": [3.0e-2, 3.0e-2, 5.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_brackets_leg_segment__length-380" } },
+      { "name": "R_ankle_pitch_housing", "mass_kg": 0.70, "inertia": [7.0e-4, 7.0e-4, 5.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_qdd__ratio-9__motor-bldc-150w" } },
+      { "name": "R_ankle_roll_housing",  "mass_kg": 0.70, "inertia": [7.0e-4, 7.0e-4, 5.0e-4, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "catalog_joints_qdd__ratio-9__motor-bldc-150w" } },
+      { "name": "R_foot",  "mass_kg": 1.20, "inertia": [3.0e-3, 5.0e-3, 5.0e-3, 0, 0, 0], "geometry_ref": { "type": "mesh_hash", "hash": "free_humanoid_foot_v0" } }
+    ],
+    "joints": [
+      { "name": "WAIST_yaw", "joint_type": "revolute", "parent_link": "pelvis", "child_link": "torso", "axis": [0, 0, 1], "origin_xyz": [0.0, 0.0, 0.18], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.5, "upper": 1.5, "effort_max": 80.0, "velocity_max": 4.0 } },
+
+      { "name": "NECK_yaw",   "joint_type": "revolute", "parent_link": "torso", "child_link": "neck_yaw_link", "axis": [0, 0, 1], "origin_xyz": [0.0, 0.0, 0.42], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.4, "upper": 1.4, "effort_max": 8.0, "velocity_max": 6.0 } },
+      { "name": "NECK_pitch", "joint_type": "revolute", "parent_link": "neck_yaw_link", "child_link": "head", "axis": [0, 1, 0], "origin_xyz": [0.0, 0.0, 0.06], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.7, "upper": 0.7, "effort_max": 8.0, "velocity_max": 6.0 } },
+
+      { "name": "L_CLAVICLE_fixed", "joint_type": "fixed", "parent_link": "torso", "child_link": "L_clavicle", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.16, 0.36], "origin_rpy": [0, 0, 0] },
+      { "name": "L_SHOULDER_pitch", "joint_type": "revolute", "parent_link": "L_clavicle", "child_link": "L_shoulder_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.04, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -3.14, "upper": 3.14, "effort_max": 60.0, "velocity_max": 6.0 } },
+      { "name": "L_SHOULDER_roll",  "joint_type": "revolute", "parent_link": "L_shoulder_pitch_housing", "child_link": "L_shoulder_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.4, "upper": 3.0, "effort_max": 60.0, "velocity_max": 6.0 } },
+      { "name": "L_SHOULDER_yaw",   "joint_type": "revolute", "parent_link": "L_shoulder_roll_housing", "child_link": "L_upper_arm", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 2.5, "effort_max": 40.0, "velocity_max": 8.0 } },
+      { "name": "L_ELBOW_pitch",    "joint_type": "revolute", "parent_link": "L_upper_arm", "child_link": "L_elbow_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.30], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 0.0, "effort_max": 40.0, "velocity_max": 8.0 } },
+      { "name": "L_ELBOW_to_forearm", "joint_type": "fixed", "parent_link": "L_elbow_housing", "child_link": "L_forearm", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "L_WRIST_yaw",   "joint_type": "revolute", "parent_link": "L_forearm", "child_link": "L_wrist_pitch_link", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, -0.26], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 2.5, "effort_max": 8.0, "velocity_max": 8.0 } },
+      { "name": "L_WRIST_pitch", "joint_type": "revolute", "parent_link": "L_wrist_pitch_link", "child_link": "L_wrist_roll_link", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 8.0, "velocity_max": 8.0 } },
+      { "name": "L_WRIST_roll",  "joint_type": "revolute", "parent_link": "L_wrist_roll_link", "child_link": "L_hand", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.6, "upper": 1.6, "effort_max": 6.0, "velocity_max": 8.0 } },
+
+      { "name": "R_CLAVICLE_fixed", "joint_type": "fixed", "parent_link": "torso", "child_link": "R_clavicle", "axis": [0, 0, 1], "origin_xyz": [0.00, -0.16, 0.36], "origin_rpy": [0, 0, 0] },
+      { "name": "R_SHOULDER_pitch", "joint_type": "revolute", "parent_link": "R_clavicle", "child_link": "R_shoulder_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, -0.04, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -3.14, "upper": 3.14, "effort_max": 60.0, "velocity_max": 6.0 } },
+      { "name": "R_SHOULDER_roll",  "joint_type": "revolute", "parent_link": "R_shoulder_pitch_housing", "child_link": "R_shoulder_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -3.0, "upper": 0.4, "effort_max": 60.0, "velocity_max": 6.0 } },
+      { "name": "R_SHOULDER_yaw",   "joint_type": "revolute", "parent_link": "R_shoulder_roll_housing", "child_link": "R_upper_arm", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 2.5, "effort_max": 40.0, "velocity_max": 8.0 } },
+      { "name": "R_ELBOW_pitch",    "joint_type": "revolute", "parent_link": "R_upper_arm", "child_link": "R_elbow_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.30], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 0.0, "effort_max": 40.0, "velocity_max": 8.0 } },
+      { "name": "R_ELBOW_to_forearm", "joint_type": "fixed", "parent_link": "R_elbow_housing", "child_link": "R_forearm", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "R_WRIST_yaw",   "joint_type": "revolute", "parent_link": "R_forearm", "child_link": "R_wrist_pitch_link", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, -0.26], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.5, "upper": 2.5, "effort_max": 8.0, "velocity_max": 8.0 } },
+      { "name": "R_WRIST_pitch", "joint_type": "revolute", "parent_link": "R_wrist_pitch_link", "child_link": "R_wrist_roll_link", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 8.0, "velocity_max": 8.0 } },
+      { "name": "R_WRIST_roll",  "joint_type": "revolute", "parent_link": "R_wrist_roll_link", "child_link": "R_hand", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.6, "upper": 1.6, "effort_max": 6.0, "velocity_max": 8.0 } },
+
+      { "name": "L_HIP_yaw",   "joint_type": "revolute", "parent_link": "pelvis", "child_link": "L_hip_yaw_housing", "axis": [0, 0, 1], "origin_xyz": [0.00,  0.10, -0.04], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "L_HIP_roll",  "joint_type": "revolute", "parent_link": "L_hip_yaw_housing", "child_link": "L_hip_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.6, "upper": 0.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "L_HIP_pitch", "joint_type": "revolute", "parent_link": "L_hip_roll_housing", "child_link": "L_hip_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.0, "upper": 1.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "L_HIP_to_thigh", "joint_type": "fixed", "parent_link": "L_hip_pitch_housing", "child_link": "L_thigh", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "L_KNEE_pitch", "joint_type": "revolute", "parent_link": "L_thigh", "child_link": "L_knee_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.38], "origin_rpy": [0, 0, 0], "limits": { "lower": 0.0, "upper": 2.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "L_KNEE_to_shank", "joint_type": "fixed", "parent_link": "L_knee_housing", "child_link": "L_shank", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "L_ANKLE_pitch", "joint_type": "revolute", "parent_link": "L_shank", "child_link": "L_ankle_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.38], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 60.0, "velocity_max": 12.0 } },
+      { "name": "L_ANKLE_roll",  "joint_type": "revolute", "parent_link": "L_ankle_pitch_housing", "child_link": "L_ankle_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.5, "upper": 0.5, "effort_max": 60.0, "velocity_max": 12.0 } },
+      { "name": "L_ANKLE_to_foot", "joint_type": "fixed", "parent_link": "L_ankle_roll_housing", "child_link": "L_foot", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, -0.05], "origin_rpy": [0, 0, 0] },
+
+      { "name": "R_HIP_yaw",   "joint_type": "revolute", "parent_link": "pelvis", "child_link": "R_hip_yaw_housing", "axis": [0, 0, 1], "origin_xyz": [0.00, -0.10, -0.04], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "R_HIP_roll",  "joint_type": "revolute", "parent_link": "R_hip_yaw_housing", "child_link": "R_hip_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.6, "upper": 0.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "R_HIP_pitch", "joint_type": "revolute", "parent_link": "R_hip_roll_housing", "child_link": "R_hip_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -2.0, "upper": 1.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "R_HIP_to_thigh", "joint_type": "fixed", "parent_link": "R_hip_pitch_housing", "child_link": "R_thigh", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "R_KNEE_pitch", "joint_type": "revolute", "parent_link": "R_thigh", "child_link": "R_knee_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.38], "origin_rpy": [0, 0, 0], "limits": { "lower": 0.0, "upper": 2.6, "effort_max": 200.0, "velocity_max": 8.0 } },
+      { "name": "R_KNEE_to_shank", "joint_type": "fixed", "parent_link": "R_knee_housing", "child_link": "R_shank", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0] },
+      { "name": "R_ANKLE_pitch", "joint_type": "revolute", "parent_link": "R_shank", "child_link": "R_ankle_pitch_housing", "axis": [0, 1, 0], "origin_xyz": [0.00, 0.00, -0.38], "origin_rpy": [0, 0, 0], "limits": { "lower": -1.0, "upper": 1.0, "effort_max": 60.0, "velocity_max": 12.0 } },
+      { "name": "R_ANKLE_roll",  "joint_type": "revolute", "parent_link": "R_ankle_pitch_housing", "child_link": "R_ankle_roll_housing", "axis": [1, 0, 0], "origin_xyz": [0.00, 0.00, 0.00], "origin_rpy": [0, 0, 0], "limits": { "lower": -0.5, "upper": 0.5, "effort_max": 60.0, "velocity_max": 12.0 } },
+      { "name": "R_ANKLE_to_foot", "joint_type": "fixed", "parent_link": "R_ankle_roll_housing", "child_link": "R_foot", "axis": [0, 0, 1], "origin_xyz": [0.00, 0.00, -0.05], "origin_rpy": [0, 0, 0] }
+    ],
+    "actuator_slots": [
+      { "name": "WAIST_yaw",        "joint": "WAIST_yaw",        "tier": 2, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+
+      { "name": "NECK_yaw",         "joint": "NECK_yaw",         "tier": 1, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+      { "name": "NECK_pitch",       "joint": "NECK_pitch",       "tier": 1, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+
+      { "name": "L_SHOULDER_pitch", "joint": "L_SHOULDER_pitch", "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "L_SHOULDER_roll",  "joint": "L_SHOULDER_roll",  "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "L_SHOULDER_yaw",   "joint": "L_SHOULDER_yaw",   "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "L_ELBOW_pitch",    "joint": "L_ELBOW_pitch",    "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "L_WRIST_yaw",      "joint": "L_WRIST_yaw",      "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+      { "name": "L_WRIST_pitch",    "joint": "L_WRIST_pitch",    "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+      { "name": "L_WRIST_roll",     "joint": "L_WRIST_roll",     "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+
+      { "name": "R_SHOULDER_pitch", "joint": "R_SHOULDER_pitch", "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "R_SHOULDER_roll",  "joint": "R_SHOULDER_roll",  "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "R_SHOULDER_yaw",   "joint": "R_SHOULDER_yaw",   "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "R_ELBOW_pitch",    "joint": "R_ELBOW_pitch",    "tier": 2, "type": "harmonic_drive", "corpus_citation": "honda-e0" },
+      { "name": "R_WRIST_yaw",      "joint": "R_WRIST_yaw",      "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+      { "name": "R_WRIST_pitch",    "joint": "R_WRIST_pitch",    "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+      { "name": "R_WRIST_roll",     "joint": "R_WRIST_roll",     "tier": 1, "type": "tendon",         "corpus_citation": "shadow-dexterous-hand" },
+
+      { "name": "L_HIP_yaw",        "joint": "L_HIP_yaw",        "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "L_HIP_roll",       "joint": "L_HIP_roll",       "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "L_HIP_pitch",      "joint": "L_HIP_pitch",      "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "L_KNEE_pitch",     "joint": "L_KNEE_pitch",     "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "L_ANKLE_pitch",    "joint": "L_ANKLE_pitch",    "tier": 2, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+      { "name": "L_ANKLE_roll",     "joint": "L_ANKLE_roll",     "tier": 2, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+
+      { "name": "R_HIP_yaw",        "joint": "R_HIP_yaw",        "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "R_HIP_roll",       "joint": "R_HIP_roll",       "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "R_HIP_pitch",      "joint": "R_HIP_pitch",      "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "R_KNEE_pitch",     "joint": "R_KNEE_pitch",     "tier": 2, "type": "cycloidal",      "corpus_citation": "sumitomo-cyclo" },
+      { "name": "R_ANKLE_pitch",    "joint": "R_ANKLE_pitch",    "tier": 2, "type": "qdd",            "corpus_citation": "mini-cheetah" },
+      { "name": "R_ANKLE_roll",     "joint": "R_ANKLE_roll",     "tier": 2, "type": "qdd",            "corpus_citation": "mini-cheetah" }
+    ],
+    "modes": [
+      {
+        "name": "safe_pose",
+        "hold_positions": {
+          "WAIST_yaw": 0.0,
+          "NECK_yaw": 0.0, "NECK_pitch": 0.0,
+          "L_SHOULDER_pitch": 0.0, "L_SHOULDER_roll": 0.0, "L_SHOULDER_yaw": 0.0, "L_ELBOW_pitch": -1.4,
+          "L_WRIST_yaw": 0.0, "L_WRIST_pitch": 0.0, "L_WRIST_roll": 0.0,
+          "R_SHOULDER_pitch": 0.0, "R_SHOULDER_roll": 0.0, "R_SHOULDER_yaw": 0.0, "R_ELBOW_pitch": -1.4,
+          "R_WRIST_yaw": 0.0, "R_WRIST_pitch": 0.0, "R_WRIST_roll": 0.0,
+          "L_HIP_yaw": 0.0, "L_HIP_roll": 0.0, "L_HIP_pitch": -0.6, "L_KNEE_pitch": 1.6, "L_ANKLE_pitch": -0.6, "L_ANKLE_roll": 0.0,
+          "R_HIP_yaw": 0.0, "R_HIP_roll": 0.0, "R_HIP_pitch": -0.6, "R_KNEE_pitch": 1.6, "R_ANKLE_pitch": -0.6, "R_ANKLE_roll": 0.0
+        },
+        "actuator_roles": {
+          "WAIST_yaw": "hold",
+          "NECK_yaw": "hold", "NECK_pitch": "hold",
+          "L_SHOULDER_pitch": "hold", "L_SHOULDER_roll": "hold", "L_SHOULDER_yaw": "hold", "L_ELBOW_pitch": "hold",
+          "L_WRIST_yaw": "hold", "L_WRIST_pitch": "hold", "L_WRIST_roll": "hold",
+          "R_SHOULDER_pitch": "hold", "R_SHOULDER_roll": "hold", "R_SHOULDER_yaw": "hold", "R_ELBOW_pitch": "hold",
+          "R_WRIST_yaw": "hold", "R_WRIST_pitch": "hold", "R_WRIST_roll": "hold",
+          "L_HIP_yaw": "hold", "L_HIP_roll": "hold", "L_HIP_pitch": "hold", "L_KNEE_pitch": "hold", "L_ANKLE_pitch": "hold", "L_ANKLE_roll": "hold",
+          "R_HIP_yaw": "hold", "R_HIP_roll": "hold", "R_HIP_pitch": "hold", "R_KNEE_pitch": "hold", "R_ANKLE_pitch": "hold", "R_ANKLE_roll": "hold"
+        }
+      },
+      {
+        "name": "standing",
+        "hold_positions": {},
+        "actuator_roles": {
+          "WAIST_yaw": "impedance",
+          "NECK_yaw": "impedance", "NECK_pitch": "impedance",
+          "L_SHOULDER_pitch": "impedance", "L_SHOULDER_roll": "impedance", "L_SHOULDER_yaw": "impedance", "L_ELBOW_pitch": "impedance",
+          "L_WRIST_yaw": "impedance", "L_WRIST_pitch": "impedance", "L_WRIST_roll": "impedance",
+          "R_SHOULDER_pitch": "impedance", "R_SHOULDER_roll": "impedance", "R_SHOULDER_yaw": "impedance", "R_ELBOW_pitch": "impedance",
+          "R_WRIST_yaw": "impedance", "R_WRIST_pitch": "impedance", "R_WRIST_roll": "impedance",
+          "L_HIP_yaw": "impedance", "L_HIP_roll": "impedance", "L_HIP_pitch": "impedance", "L_KNEE_pitch": "impedance", "L_ANKLE_pitch": "impedance", "L_ANKLE_roll": "impedance",
+          "R_HIP_yaw": "impedance", "R_HIP_roll": "impedance", "R_HIP_pitch": "impedance", "R_KNEE_pitch": "impedance", "R_ANKLE_pitch": "impedance", "R_ANKLE_roll": "impedance"
+        }
+      },
+      {
+        "name": "walking",
+        "hold_positions": {},
+        "actuator_roles": {
+          "WAIST_yaw": "impedance",
+          "NECK_yaw": "impedance", "NECK_pitch": "impedance",
+          "L_SHOULDER_pitch": "impedance", "L_SHOULDER_roll": "impedance", "L_SHOULDER_yaw": "impedance", "L_ELBOW_pitch": "impedance",
+          "L_WRIST_yaw": "hold", "L_WRIST_pitch": "hold", "L_WRIST_roll": "hold",
+          "R_SHOULDER_pitch": "impedance", "R_SHOULDER_roll": "impedance", "R_SHOULDER_yaw": "impedance", "R_ELBOW_pitch": "impedance",
+          "R_WRIST_yaw": "hold", "R_WRIST_pitch": "hold", "R_WRIST_roll": "hold",
+          "L_HIP_yaw": "impedance", "L_HIP_roll": "impedance", "L_HIP_pitch": "impedance", "L_KNEE_pitch": "impedance", "L_ANKLE_pitch": "impedance", "L_ANKLE_roll": "impedance",
+          "R_HIP_yaw": "impedance", "R_HIP_roll": "impedance", "R_HIP_pitch": "impedance", "R_KNEE_pitch": "impedance", "R_ANKLE_pitch": "impedance", "R_ANKLE_roll": "impedance"
+        }
+      },
+      {
+        "name": "manipulation",
+        "hold_positions": {},
+        "actuator_roles": {
+          "WAIST_yaw": "impedance",
+          "NECK_yaw": "impedance", "NECK_pitch": "impedance",
+          "L_SHOULDER_pitch": "impedance", "L_SHOULDER_roll": "impedance", "L_SHOULDER_yaw": "impedance", "L_ELBOW_pitch": "impedance",
+          "L_WRIST_yaw": "impedance", "L_WRIST_pitch": "impedance", "L_WRIST_roll": "impedance",
+          "R_SHOULDER_pitch": "impedance", "R_SHOULDER_roll": "impedance", "R_SHOULDER_yaw": "impedance", "R_ELBOW_pitch": "impedance",
+          "R_WRIST_yaw": "impedance", "R_WRIST_pitch": "impedance", "R_WRIST_roll": "impedance",
+          "L_HIP_yaw": "hold", "L_HIP_roll": "hold", "L_HIP_pitch": "hold", "L_KNEE_pitch": "hold", "L_ANKLE_pitch": "hold", "L_ANKLE_roll": "hold",
+          "R_HIP_yaw": "hold", "R_HIP_roll": "hold", "R_HIP_pitch": "hold", "R_KNEE_pitch": "hold", "R_ANKLE_pitch": "hold", "R_ANKLE_roll": "hold"
+        }
+      }
+    ]
+  }
+}

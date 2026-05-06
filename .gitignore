@@ -1,0 +1,32 @@
+# Build outputs from OpenLoco compilation
+out/
+target/
+build/
+
+# Generated artifacts (should be regenerated from descriptor)
+*.urdf
+*.mjcf
+*.xml.generated
+bom.csv.generated
+assembly.md.generated
+meshes/
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python virtualenvs (in case any tooling lands)
+.venv/
+__pycache__/
+*.pyc
+
+# Rust target
+Cargo.lock.bak
+
+# Local secrets / credentials
+.env
+*.key
+*.pem

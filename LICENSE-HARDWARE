@@ -1,0 +1,27 @@
+SPDX-License-Identifier: CERN-OHL-S-2.0
+
+Free Humanoid Platform — Hardware License
+==========================================
+
+The hardware artifacts in this repository (mechanical CAD, schematics, PCB
+layouts, BOM-encoded mechanical and electrical designs, and any other
+hardware design files not covered by the LICENSE-DATA, LICENSE-SOFTWARE,
+or LICENSE-DOCS files) are licensed under the CERN Open Hardware Licence
+Version 2 - Strongly Reciprocal (CERN-OHL-S-2.0).
+
+Canonical text:
+  https://cern-ohl.web.cern.ch/    (project page)
+  https://ohwr.org/cern_ohl_s_v2.txt    (canonical plain-text form)
+  https://spdx.org/licenses/CERN-OHL-S-2.0.html    (SPDX entry)
+
+Strongly reciprocal: any modified or derived hardware design must be
+released under the same license. This is the chosen posture for the Free
+Humanoid Platform — the platform is meant to be a forking baseline, not raw
+material for proprietary forks.
+
+NOTE (release blocker): the full canonical text of CERN-OHL-S-2.0 must be
+inlined into this file before any public push. The header above is a
+working placeholder. The full text is approximately 16 KB and is required
+both by the license itself and by SPDX best practice.
+
+Copyright (c) Free Humanoid Platform Contributors.
