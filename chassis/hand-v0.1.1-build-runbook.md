@@ -93,27 +93,53 @@ McMaster ships overnight; treat it as just-in-time inventory.
 
 ## 3. Pre-fabrication CAD prep (day 0–2)
 
-Before the print order:
+### 3.1. Static verification via openie-cad (free, ~5 seconds)
+
+Before any rendering, run the [openie-cad](https://github.com/openIE-dev/openie-cad) (commercial frontend at [cad.openie.dev](https://cad.openie.dev)) parser + UDD-import verifier across all 9 source files. This is stronger than brace/paren balancing — it confirms every file lexes, parses to a clean AST, and imports to a Unified Design Document without semantic error:
+
+```sh
+cd /Users/dcharlot/data-share/vibe-coding/openie-cad
+cargo build -p cad-interop --example check_openscad   # one-time, ~30 s
+SCAD=/path/to/free-humanoid-platform/chassis/cad
+./target/debug/examples/check_openscad \
+  $SCAD/hand_params.scad \
+  $SCAD/phalanx.scad \
+  $SCAD/finger.scad \
+  $SCAD/palm.scad \
+  $SCAD/motor_bracket.scad \
+  $SCAD/pulley.scad \
+  $SCAD/spool.scad \
+  $SCAD/skin_mold.scad \
+  $SCAD/hand_assembly.scad
+```
+
+Expected: 9 lines starting with `PASS`, exit 0. The v0.1.1 baseline result is recorded in [hand-v0.1.1-fixes.md](hand-v0.1.1-fixes.html#openie-cad-verification). Any file that prints `FAIL` is a regression — fix and re-run before generating STLs.
+
+This is the canonical CAD verification step for the family. Eventually it will be wired into CI on every push.
+
+### 3.2. STL render
+
+OpenSCAD itself has been Homebrew-deprecated as of 2026-09-01 (Gatekeeper signing); the cleanest path is the [OpenSCAD nightly build](https://openscad.org/downloads.html#snapshots) or rendering through openie-cad's CSG kernel (in-progress; not yet exposed to the CLI as of this writing). For now:
 
 ```sh
 cd chassis/cad/
 openscad -o ../../out/hand_assembly.stl hand_assembly.scad
-openscad -o ../../out/skin_mold.stl skin_mold.scad
-# also generate per-finger STLs for orientation-friendly print packing:
-openscad -D 'render_target="finger"'  -o ../../out/finger.stl  finger.scad
-openscad -D 'render_target="palm"'    -o ../../out/palm.stl    palm.scad
-openscad -D 'render_target="bracket"' -o ../../out/motor_bracket.stl motor_bracket.scad
+openscad -o ../../out/skin_mold.stl    skin_mold.scad
+# per-finger and per-palm STLs for orientation-friendly print packing:
+openscad -D 'render_target="finger"'  -o ../../out/finger.stl         finger.scad
+openscad -D 'render_target="palm"'    -o ../../out/palm.stl           palm.scad
+openscad -D 'render_target="bracket"' -o ../../out/motor_bracket.stl  motor_bracket.scad
 ```
 
-(If your `.scad` files do not yet support `render_target` — they may not — render the assemblies as-is and let the service bureau orient.)
+(If the `.scad` files do not yet support `render_target` — they may not — render the assemblies as-is and let the service bureau orient.)
 
-**Mass-produce sanity checks before upload:**
+### 3.3. Mass-produce sanity checks before upload
 
-1. Open `hand_assembly.stl` in [Prusa Slicer](https://www.prusa3d.com/page/prusaslicer_424/) or [Meshmixer](https://meshmixer.com/) — eyeball for obvious geometry errors (floating phalanges, missing barrels, intersecting walls). The audit caught nine of these on paper; the human eye catches what the audit missed.
-2. Print a single finger in PLA on whatever desktop printer you have first. **Cost: ~$2 in filament. Buys you a lot of confidence.** Confirm the joint barrel diameter accepts a 3 mm dowel by hand and the bushing pocket accepts the 8458K71 flange.
+1. Open `hand_assembly.stl` in [Prusa Slicer](https://www.prusa3d.com/page/prusaslicer_424/) or [Meshmixer](https://meshmixer.com/) — eyeball for geometry errors (floating phalanges, missing barrels, intersecting walls). The audit caught nine on paper; the human eye catches what the audit missed.
+2. Print a single finger in PLA on whatever desktop printer you have. **Cost: ~$2 in filament. Buys a lot of confidence.** Confirm the joint barrel accepts a 3 mm dowel by hand and the bushing pocket accepts the 8458K71 flange.
 3. Only after the desktop test passes should the SLS PA12 production print go to the service bureau.
 
-This gates the largest cost line in the BOM ($320 print) on a $2 desktop test.
+This gates the largest BOM cost line ($320 print) on a $2 desktop test plus a 5-second openie-cad parse run.
 
 ---
 

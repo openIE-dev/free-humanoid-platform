@@ -151,3 +151,28 @@ No new line items added. Other quantities and prices unchanged. (The TOTAL line 
 3. **Forearm bracket for the load cell (out-of-scope #9).** Once forearm CAD exists, drop a CZL635 mount adjacent to the Moteus n1 and route the synergy tendon through it inline.
 4. **Re-render the assembled view** with the v0.1.1 finger orientation fix to confirm the proximal phalanx body extends from the palm distal edge rather than sitting inside the palm cavity (visualization issue #28).
 5. **Verify Maxon GP 32 HP front-face PCD** against the current Maxon catalog drawing 166940 before ordering bracket stock — the 27 mm / M3 figure used in v0.1.1 is the standard catalog value; confirm no catalog revision since the audit.
+
+---
+
+## openie-cad verification
+
+Run on **2026-05-07** against [openie-cad](https://github.com/openIE-dev/openie-cad) `main` @ `e535bf1` ([`cad.openie.dev`](https://cad.openie.dev)). All 9 source files lex, parse, and import to UDD without error:
+
+```
+PASS hand_params.scad   — 0 top-level expr  → 0 bodies,   0 UDD nodes
+PASS phalanx.scad       — 20 top-level expr → 20 bodies, 11 UDD nodes
+PASS finger.scad        — 6 top-level expr  → 6 bodies,   0 UDD nodes
+PASS palm.scad          — 20 top-level expr → 20 bodies, 14 UDD nodes
+PASS motor_bracket.scad — 6 top-level expr  → 6 bodies,   2 UDD nodes
+PASS pulley.scad        — 1 top-level expr  → 1 body,     1 UDD nodes
+PASS spool.scad         — 5 top-level expr  → 5 bodies,   4 UDD nodes
+PASS skin_mold.scad     — 17 top-level expr → 17 bodies, 14 UDD nodes
+PASS hand_assembly.scad — 7 top-level expr  → 7 bodies,   4 UDD nodes
+exit 0
+```
+
+(`hand_params.scad` reporting 0 top-level expressions is expected — it's pure parameters with no geometry.)
+
+This is a static parse + UDD-import check, not a CSG → B-Rep render. The OpenSCAD render step in the build runbook §3.2 is still required for STL generation. CSG evaluation through openie-cad's kernel is on the roadmap for cad.openie.dev; once exposed, it will replace the OpenSCAD render step.
+
+The verifier itself lives at [openie-cad/crates/cad-interop/examples/check_openscad.rs](https://github.com/openIE-dev/openie-cad/blob/main/crates/cad-interop/examples/check_openscad.rs). Re-run before any future CAD edit.
