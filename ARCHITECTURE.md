@@ -292,9 +292,8 @@ Onboard perception pipeline:
 
 ### 2.9 Manipulation
 
-- **Default end-effector:** 5-finger underactuated hand (synergy-reduced from full anatomical DoF count). Corpus: `pisa-iit-softhand` (synergy-based), `shadow-dexterous-hand` (full-DoF reference), `dlr-hand-ii`.
-- **Alternative:** parallel-jaw gripper for industrial-task variants. Corpus: trivially universal prior art.
-- **TBD (architectural call):** which hand variant is the *default* in the descriptor. Recommendation: underactuated soft hand for the reference, with a parallel-jaw alternative descriptor as a separate UDD.
+- **Default end-effector:** 5-finger underactuated hand (synergy-reduced from full anatomical DoF count) — committed (§9 #4). Corpus: `pisa-iit-softhand` (synergy-based), `shadow-dexterous-hand` (full-DoF reference), `dlr-hand-ii`.
+- **Alternative variants:** parallel-jaw gripper for industrial-task descriptor variants; full-DoF Shadow-class held as a research-grade upgrade path for Phase 3+. Each ships as a separate UDD descriptor.
 
 ### 2.10 Learning policy
 
@@ -313,7 +312,7 @@ See §1.6. Layered:
 
 Hot-swap Li-ion pack, ~1 kWh nominal, 48 V. Onboard 24 V and 12 V DC-DC rails for compute and sensors. Estimated runtime 1.5–3 hours depending on workload.
 
-**TBD (architectural call):** hot-swap interface mechanical standard.
+**Hot-swap interface:** committed (§9 #6) to a CC0 commons specification designed by this project and contributed upstream to OpenLoco UDD as an extension proposal. The spec describes mechanical mount, electrical contacts, BMS-handshake protocol, and thermal interface. Modeled on the shoal cartridge interface pattern. Avoids commercial battery-pack vendor lock-in.
 
 ### 2.13 End-of-life
 
@@ -458,23 +457,25 @@ This is the OpenIE thesis applied to humanoids. The descriptor compiler, the pri
 
 ---
 
-## 9. Open architectural decisions (summary)
+## 9. Architectural commitments
 
-The load-bearing decisions flagged for user input, in priority order:
+The ten load-bearing decisions, resolved. Each commitment is shielded by the cited prior art chain so that adopting it carries minimal patent-thicket risk. Subsystem sections above are written to these commitments.
 
-1. **Actuator distribution** (§1.2 / §2.4). Pure cycloidal vs. pure QDD vs. hybrid (recommended). Determines BOM cost, control characteristics, and corpus-shielding emphasis.
-2. **Mass budget** (§2.1). 30 kg (lightweight academic), 50 kg (recommended median), 80 kg (industrial). Determines battery, actuator torque, and use-case envelope.
-3. **Default policy architecture** (§1.6 / §2.10). Classical MPC + scripted vs. RL-locomotion + IL-manipulation (recommended) vs. full VLA. Determines data and compute requirements.
-4. **Default end-effector** (§2.9). Underactuated 5-finger hand (recommended) vs. parallel-jaw vs. both-as-variants. Determines manipulation policy training data needs.
-5. **Depth modality** (§1.3). Stereo (recommended) vs. structured-light vs. ToF.
-6. **Hot-swap battery interface mechanical standard** (§2.12 / §1.8). Recommendation: design one, contribute the spec. Or: pick an existing commercial standard.
-7. **Cycloidal sourcing** (§1.2). Commodity buy vs. design our own. Trade is build-speed vs. corpus-shielding completeness.
-8. **Hand variant for first physical build** (Phase 2 of §6). Underactuated soft (recommended) vs. full-DoF Shadow-style.
-9. **Reference-design vs. specific-build distinction** (governance). Whether the platform repo should ship a specific build (with chosen vendor parts) or only the reference design (with vendor-agnostic specs).
-10. **Joule SOM commitment** (§2.6). Whether the descriptor's `compute` block defaults to Joule SOM or to a vendor-agnostic abstract HAL with Joule SOM as one implementation among many.
+| # | Decision | Commitment | Shielding chain (corpus ids) |
+|---|---|---|---|
+| 1 | **Actuator distribution** | **Hybrid.** Cycloidal at hip + knee; harmonic-drive at shoulder + elbow; QDD at ankle; tendon at wrist + hand. | `sumitomo-cyclo` (1937, 89 yr) for hip/knee; `honda-e0` (1986, 40 yr) and `dlr-toro` (2014) for shoulder/elbow; `mit-cheetah-2` (2014), `mini-cheetah` (2019), `cassie-osu` for ankle QDD; `da-vinci-knight` (1495, 528 yr) plus `shadow-dexterous-hand` (2002), `dlr-hand-ii` (2001) for wrist + hand tendon. The hybrid lets each joint be shielded by its deepest available prior-art chain rather than forcing a one-size choice. |
+| 2 | **Mass budget** | **50 kg reference build.** 30 kg "academic-light" and 80 kg "industrial-heavy" published as descriptor variants. | `wabot-1` (1973), Honda E/P chain (`honda-e0`–`honda-p3` 1986–1997), `asimo`, HRP series (`hrp-2` 2003 → `hrp-5p` 2018), `nasa-valkyrie`, `pal-talos`, `cassie-osu`, `digit-meta`, `berkeley-humanoid`. The 50 kg target hits the median of the academic-platform mass distribution; nothing about the choice is novel. |
+| 3 | **Default policy stack** | **Classical MPC + RL locomotion + IL manipulation.** Layered as in §2.10. Full VLA documented as a recommended upgrade path with its own shielding. | MPC: `khatib-operational-space` (1987), `featherstone-rdf` (1987), `kajita-lipm` (2001). RL locomotion: `cassie-osu`, `mini-cheetah`, `hwangbo-anymal-sim2real` (2019). IL manipulation: `act-aloha` (2023), `mobile-aloha` (2024), `diffusion-policy` (2023). Optional VLA: `openai-rt-2` (2023), `open-x-embodiment` (2023), `openvla` (2024), `physical-intelligence-pi-zero`. |
+| 4 | **Default end-effector** | **Underactuated 5-finger hand** (synergy-reduced). Parallel-jaw and full-DoF Shadow-class hands published as alternative descriptor variants. | `da-vinci-knight` (1495), `pisa-iit-softhand` (2014, synergy reference), `shadow-dexterous-hand` (2002), `dlr-hand-ii` (2001). Synergy-driven underactuation has the simplest BOM and the strongest academic anchor for an open reference. |
+| 5 | **Depth modality** | **Stereo cameras** (head-mounted, paired with on-fingertip GelSight tactile). | `pomerleau-alvinn` (1989) for camera-to-action stereo; `howe-cutkosky-tactile-1989`, `biotac-syntouch` (2008), `gelsight` (2009) for fingertip tactile. Structured-light and ToF carry heavier patent thickets (commercial entanglements with Apple, Intel, Microsoft, Sony); stereo + GelSight is the demonstrably-clean depth+contact stack. |
+| 6 | **Hot-swap battery interface** | **Design our own commons spec, contribute upstream to OpenLoco UDD.** Modeled on the shoal cartridge interface pattern. CC0. | Commercial battery-pack standards carry vendor-IP entanglements; designing the spec ourselves and donating it to a CC0 commons is the anti-patent-thicket move and matches the OpenIE family pattern (shoal's gut-cartridge interface, openloco's UDD descriptor format). The spec will be a short OpenLoco extension proposal alongside the actuator-slot extensions. |
+| 7 | **Cycloidal sourcing** | **Commodity buy** for v0 (Sumitomo CYCLO product line, Onvio, Spinea). Design-our-own held as a future track once manufacturing volume justifies it. | `sumitomo-cyclo` (1937) plus the academic/industrial chain since means commodity sourcing is bulletproof; engineering effort is better spent on integration and the higher-leverage hand and safety supervisor work. |
+| 8 | **Hand variant for first physical build** | **Underactuated 5-finger** matching the v0 default (commitment 4). Shadow-class held as a research-grade upgrade path for Phase 3+. | `pisa-iit-softhand` (2014). Lower BOM, simpler training data, strong academic prior art. |
+| 9 | **Reference-design vs specific-build governance** | **Reference design.** The descriptor (`free-humanoid.udd.json`, CC0) is the canonical artifact. Specific physical builds — with chosen vendor parts, BOM-specific dimensions, etc. — are downstream tenants. | Matches OpenLoco's substrate-vs-tenant pattern: OpenLoco is the descriptor compiler, individual robots (and now this platform) are tenants. The platform repo ships the reference; vendor-specific builds live in tenant repos that pin their BOM. |
+| 10 | **Joule SOM commitment depth** | **Joule SOM as recommended-default within an abstract HAL.** The descriptor's `compute` block specifies the abstract HAL interface; Joule SOM is one implementation. Jetson, Coral, NUC, Pi 5 are documented alternative implementations. | The HAL abstraction is the OpenLoco-substrate pattern applied to compute. The platform isn't locked to Joule, but Joule is the recommended path because it's the only implementation today that gives deterministic-LUT inference + RISC-V housekeeping + safety co-processor in a single module. |
 
-These are the architectural calls. The scaffold is structured to support any answer to each; the recommendations are this document's defaults.
+These commitments are this document's defaults. Subsystem sections (§2) reflect them in detail. Future amendments require a corpus-citation update demonstrating that any new shielding chain is at least as deep as the chain it replaces.
 
 ---
 
-*Free Humanoid Platform — the seventeenth OpenLoco morphology — scaffold v0.0 — 2026-05-06.*
+*Free Humanoid Platform — the seventeenth OpenLoco morphology — scaffold v0.1 — 2026-05-06.*
