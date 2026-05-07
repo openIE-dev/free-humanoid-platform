@@ -96,7 +96,7 @@ For each of the 15 phalanx joints (5 fingers × 3 joints, with the thumb's 2 joi
 
 1. **Press-fit a flanged bronze bushing** (8458K71 equivalent, 3 mm ID) into each side of the proximal joint bore. Light film of Krytox GPL 205 on the bushing OD eases the press fit. Confirm the flange seats flush.
 2. **Fit the torsion spring** (Lee Spring LTR-040A-04S equivalent) over the joint axis. The free leg of the spring engages a small slot on the proximal phalanx; the active leg bears against the distal phalanx face such that the spring biases the joint toward the **open / extended** posture. Pre-load of ~5–10° is acceptable; do not exceed the spring's rated angular deflection.
-3. **Slide the 3 mm dowel pin** (Misumi PB3-30-NN-A) through both bushings + the spring. Light Krytox on the pin.
+3. **Slide the 3 mm dowel pin** (Misumi PB3-12-NN-A — 12 mm length, sized to the 10 mm joint barrel + 1 mm/side E-clip overhang per v0.1.1 fix #8) through both bushings + the spring. Light Krytox on the pin.
 4. **Retain the pin** with a small 3 mm E-clip or with a captive-screw retainer geometry built into the printed phalanx (preferred — eliminates a part). Confirm the joint moves freely with ~0.05–0.15 N·m breakaway friction.
 5. **Smoke-test the joint** by manually closing it 50× and inspecting for binding, bushing migration, or spring chatter.
 
@@ -142,11 +142,11 @@ Each cable should sit slack at full hand-open posture (return springs holding th
 
 ### 5.1 Motor + reducer assembly
 
-Mount the Maxon GP 32 HP 14:1 planetary head to the EC-i 30 motor face per Maxon's mounting note (no shims required for the GP-32-to-EC-i-30 paired flange). Torque the four M3 mounting screws to 1.0 N·m with Loctite 222.
+Mount the Maxon GP 32 HP 14:1 planetary head to the EC-i 30 motor face per Maxon's mounting note (no shims required for the GP-32-to-EC-i-30 paired flange). Torque the four M3 mounting screws (4× M3 on PCD 27 mm per Maxon GP 32 HP cat 166940 — v0.1.1 fix #3, corrected from prior M2.5/PCD 22 mm) to 1.0 N·m with Loctite 222.
 
 ### 5.2 Motor mount bracket
 
-Bolt the milled aluminum motor mount bracket (Phase 0 prep) into the palm housing using four M2.5 SHCS at 0.5 N·m. Confirm the motor output shaft is concentric with the spool axis to within 0.1 mm; misalignment of >0.2 mm will cause cable mis-tracking on the spool.
+Bolt the milled aluminum motor mount bracket (Phase 0 prep) into the palm housing using four M2.5 SHCS at 0.5 N·m on PCD 25 mm at 0/90/180/270 (v0.1.1 fix #1: bracket-to-palm bolt circle aligned with palm; the bracket-to-motor face is a separate, smaller 4× M3 PCD 27 pattern internal to the bracket). Confirm the motor output shaft is concentric with the spool axis to within 0.1 mm; misalignment of >0.2 mm will cause cable mis-tracking on the spool.
 
 ### 5.3 Spool + AS5048A magnet
 
@@ -254,6 +254,10 @@ Record these as the v0.1 baseline. Subsequent UDD descriptor iterations should m
 ---
 
 ## 10. Synergy controller calibration procedure
+
+> **v0.1.1 fix #9 — load-cell location.** The Phidgets CZL635 cable-tension load cell lives **forearm-side** adjacent to the Moteus n1 (per §5.4 forearm-side controller mounting), not in the palm. The forearm bracket housing the load cell is a forearm-subassembly artifact — out of scope for the hand v0.1.1 work.
+>
+> **v0.1.1 fix #5 — cable-force figures, updated.** With `spool_radius_m = 0.004 m` (corrected from 0.008 m to match the BOM 8 mm spool OD), continuous cable force ≈ 0.82 N·m / 0.004 m ≈ **205 N**, peak ≈ 6.25 N·m / 0.004 m ≈ **1562 N**. Both figures are roughly 2× the v0.1 derivations, well within the Spectra cable's tensile envelope but flag larger loads on the in-palm pulley flanges and tendon-channel walls than v0.1 anticipated.
 
 The synergy controller maps a single scalar **grasp-progress** input ∈ [0, 1] to a target spool position and a cable-tension feedforward. The mapping is calibrated in three steps.
 

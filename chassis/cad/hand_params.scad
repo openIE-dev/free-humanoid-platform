@@ -50,7 +50,8 @@ thumb_opposition_deg  = 80;   // angle of thumb axis vs. palm long axis
 //    BOM bushing    = SAE 841 bronze flanged sleeve, 3 mm ID x 5 mm OD x 4 mm L
 // --------------------------------------------------------------------------
 axle_dia          = 3.0;     // mm — joint pin (BOM joint_axle)
-axle_length       = 30.0;    // mm — pin length (BOM)
+axle_length       = 12.0;    // mm — pin length (BOM PB3-12-NN-A; v0.1.1 fix #8)
+                              // joint_barrel_length=10 + 1 mm overhang/side for E-clip groove zone
 bushing_id        = 3.0;     // mm — matches axle dia
 bushing_od        = 5.0;     // mm — bushing outer diameter
 bushing_length    = 4.0;     // mm — bushing axial length
@@ -134,13 +135,14 @@ palm_wall_t           = 3.5;        // mm — palm structural wall
 
 // --------------------------------------------------------------------------
 // 7. Motor mount — Maxon GP 32 HP face
-//    Maxon GP 32 catalog: 4× M3 face holes on PCD ~22 mm (verify against
-//    Maxon mounting drawing 166940 prior to ordering bracket stock).
-//    cad-references.md §1.5 calls out 4× M2.5 to palm chassis.
+//    Per Maxon GP 32 HP (cat 166940) front-face mounting — verify against
+//    current drawing prior to fabrication.
+//    v0.1.1 fix #3: corrected from 22 mm/M2.5 to 27 mm/M3 to match Maxon
+//    GP 32 HP published front-face pattern (4× M3 on PCD 27 mm).
 // --------------------------------------------------------------------------
-motor_face_pcd        = 22.0;       // mm — bolt circle diameter on motor face
-motor_face_bolt_m     = 2.5;        // mm — M2.5 face screws
-motor_face_bolt_dia   = 2.7;        // mm — clearance hole (M2.5 close fit)
+motor_face_pcd        = 27.0;       // mm — bolt circle diameter on motor face (Maxon GP 32 HP)
+motor_face_bolt_m     = 3.0;        // mm — M3 face screws (Maxon GP 32 HP)
+motor_face_bolt_dia   = 3.2;        // mm — clearance hole (M3 close fit)
 motor_shaft_clear_dia = 11.0;       // mm — central clearance for planetary output
 
 palm_mount_pcd        = 25.0;       // mm — mount-to-palm bolt circle (cad-ref §1.5)
@@ -171,9 +173,11 @@ finger_mcp_y = [palm_length/2, palm_length/2, palm_length/2, palm_length/2];
 thumb_cmc_x = -palm_width/2 + 10;
 thumb_cmc_y = palm_length/2 - 25;
 
-// 12 PEEK pulleys per BOM: 1 spool + 2 distribution + 5 MCP redirect + 4 spare
-// In palm.scad we instantiate 8 (the in-palm fixed routing pulleys).
-palm_pulley_count    = 8;
+// 12 PEEK pulleys per BOM: 1 spool + 3 distribution (in palm) + 5 MCP redirect
+// (one per finger, in finger_mcp_mount) + 3 spare.
+// v0.1.1 fix #4 / #12: dropped from 8 star-pattern in-palm to 3 routing-driven
+// distribution pulleys + added MCP redirect pulley pockets to each finger MCP mount.
+palm_pulley_count    = 3;
 
 // Load cell — Phidgets CZL635 cavity (S-type micro load cell)
 loadcell_cavity_l    = 38.0;    // mm — body length (estimate; verify CZL635 drawing)
@@ -185,7 +189,11 @@ loadcell_mount_bolt_m= 2.5;
 wrist_iface_od       = 30.0;    // mm — circular flange
 wrist_iface_pcd      = 18.0;    // mm — bolt circle (cad-references §1.1)
 wrist_iface_bolt_m   = 2.5;
-wrist_iface_count    = 3;
+// v0.1.1 fix #19: 4 equally-spaced bolts + a 2 mm dia keying pin offset
+// at one position (between bolts) to enforce wrist orientation.
+wrist_iface_count    = 4;
+wrist_iface_key_dia  = 2.0;     // mm — keying pin diameter
+wrist_iface_key_pcd  = 22.0;    // mm — keying pin sits outside bolt circle
 
 // --------------------------------------------------------------------------
 // 9. Skin mold (two-part silicone mold for hand skin)

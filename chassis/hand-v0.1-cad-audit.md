@@ -115,3 +115,9 @@ Before ordering any parts, a real CAD engineer should: (1) pull the official Max
 ---
 
 *Audit performed against files as of 2026-05-06. Read-only; no source files modified.*
+
+---
+
+## v0.1.1 update — 2026-05-07
+
+Critical issues #1, #2, #3, #4, #5, #6, #7, #8, #9 addressed in chassis/hand-v0.1.1-fixes.md. Significant issues #10, #11, #14, #18, #19, #20 also addressed. Issues #12, #13, #15, #16, #17, #21, #22 deferred to v0.1.2 or to second-pass audit. This audit is now **historical** — see hand-v0.1.1-fixes.md for current state and re-run audit before fabrication.

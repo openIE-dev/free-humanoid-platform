@@ -49,34 +49,36 @@ module assembled_hand() {
             rotate([0, 0, 0])
                 spool_single();
 
-    // 4 fingers (index, middle, ring, pinky) at palm distal edge
+    // 4 fingers (index, middle, ring, pinky) at palm distal edge.
+    // v0.1.1 fix #2: rotate([0,0,90]) dropped — finger module now lays
+    // phalanges along +Y natively, so no Z-rotation is needed at placement.
     for (i = [0 : 3]) {
         color("LightGray")
             translate([finger_mcp_x[i],
                        palm_length/2 + (explode * 10),
                        palm_thickness/2])
-                rotate([0, 0, 90])
-                    finger();
+                finger();
     }
 
-    // Thumb (opposed)
+    // Thumb (opposed). thumb_opposition_deg supplies the opposition rotation;
+    // the trailing +90 from v0.1 is dropped (v0.1.1 fix #2).
     color("LightGray")
         translate([thumb_cmc_x - (explode * 15),
                    thumb_cmc_y - (explode * 15),
                    palm_thickness/2])
-            rotate([0, 0, thumb_opposition_deg + 90])
+            rotate([0, 0, thumb_opposition_deg])
                 finger(thumb=true);
 }
 
 module skeleton_only() {
     palm();
+    // v0.1.1 fix #2: finger placement Z-rotation dropped (see assembled_hand).
     for (i = [0 : 3]) {
         translate([finger_mcp_x[i], palm_length/2, palm_thickness/2])
-            rotate([0, 0, 90])
-                finger();
+            finger();
     }
     translate([thumb_cmc_x, thumb_cmc_y, palm_thickness/2])
-        rotate([0, 0, thumb_opposition_deg + 90])
+        rotate([0, 0, thumb_opposition_deg])
             finger(thumb=true);
 }
 

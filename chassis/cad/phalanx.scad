@@ -29,12 +29,23 @@ module axle_hole(d=axle_dia + axle_to_bushing_clearance, h=joint_barrel_length +
 
 module bushing_pocket(h=joint_barrel_length) {
     // Two flanged-bushing pockets, one per side of the barrel.
-    for (s = [-1, 1])
+    // v0.1.1 fix #10: add a Ø7 × 0.8 mm counterbore step at the outer face
+    // of each pocket so the bushing flange seats flush instead of standing
+    // proud — without this, flange fouls phalanx-to-phalanx mating face.
+    for (s = [-1, 1]) {
+        // Bore for the bushing body (sleeve)
         translate([0, s * (h/2 - bushing_length/2), 0])
             rotate([90, 0, 0])
                 cylinder(d=bushing_od + bushing_press_interference,
                          h=bushing_length + 0.1,
                          center=true, $fn=$fn_hi);
+        // Outer-face counterbore for the bushing flange
+        translate([0, s * (h/2 - bushing_flange_t/2 + 0.05), 0])
+            rotate([90, 0, 0])
+                cylinder(d=bushing_flange_od,
+                         h=bushing_flange_t + 0.1,
+                         center=true, $fn=$fn_hi);
+    }
 }
 
 module spring_pocket(angle=0) {
@@ -44,10 +55,13 @@ module spring_pocket(angle=0) {
         cylinder(d=spring_pocket_dia,
                  h=spring_pocket_length,
                  center=true, $fn=$fn_hi);
-    // active-leg engagement slot (small radial slot)
+    // active-leg engagement slot (small radial slot).
+    // v0.1.1 fix #18: rotate the cube [90,0,0] so its long axis aligns with
+    // the axle Y (the spring's plane), instead of standing along world Z.
     rotate([0, 0, angle])
         translate([spring_pocket_dia/2, 0, 0])
-            cube([2.0, 1.5, spring_pocket_length], center=true);
+            rotate([90, 0, 0])
+                cube([2.0, 1.5, spring_pocket_length], center=true);
 }
 
 module skin_mount_features() {
@@ -116,14 +130,32 @@ module phalanx(length=proximal_length,
             translate([-length/2, 0, 0]) spring_pocket();
         }
 
-        // Tendon channel through full length
-        // Manual channel because helper depends on local height var
+        // Tendon channel through full length.
+        // v0.1.1 fix #11: moved z-position to just below the joint barrel
+        // (-(height/2 - 1) on the palmar side), so the channel does NOT clip
+        // through the barrel/bushing/axle bore. Plus a small dorsal-palmar
+        // reroute segment at each joint to guide the tendon under the barrel.
         side_offset = (tendon_side == "palmar") ? -1 : 1;
-        translate([0, 0, side_offset * (height/2 - 3.0)])
+        z_main = side_offset * (height/2 - 1);
+        // Main palmar/dorsal channel along X (full length)
+        translate([0, 0, z_main])
             rotate([0, 90, 0])
                 cylinder(d=tendon_hole_dia,
                          h=length + 2,
-                         center=true, $fn=$fn_lo);
+                         center=true, $fn=$fn_hi);
+        // Small joint reroute: a short Z-direction segment at each joint
+        // brings the tendon from the deep palmar channel up to the pulley
+        // exit at the joint barrel underside.
+        for (xs = [-1, 1]) {
+            // skip distal reroute on tip phalanges (no distal joint)
+            if (xs == 1 && (joint_type == "DIP" || joint_type == "THUMB_IP")) {
+                // no distal reroute
+            } else {
+                translate([xs * length/2, 0, z_main + side_offset * -1.5])
+                    cylinder(d=tendon_hole_dia,
+                             h=3.0, center=true, $fn=$fn_hi);
+            }
+        }
     }
 
     // Skin attachment dimples (additive)

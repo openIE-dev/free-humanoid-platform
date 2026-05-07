@@ -5,19 +5,28 @@
 // to the palm chassis. ~80 g.
 //
 // Features:
-//   - 4× M2.5 motor face holes on motor_face_pcd (22 mm BCD)
-//   - 4× M3 mount holes to palm.scad (palm_mount_pcd, 25 mm BCD)
+//   - 4× M3 motor face holes on motor_face_pcd (27 mm BCD, Maxon GP 32 HP)
+//   - 4× M2.5 mount holes to palm.scad (palm_mount_pcd, 25 mm BCD)
 //   - thermal mass relief (lightening pockets / fins)
 //   - cable management notch
 //   - central clearance for motor planetary output shaft
+//
+// v0.1.1 fixes:
+//   - #1/#3: motor face holes laid out at 0/90/180/270 (was 45/135/225/315),
+//            PCD 27 mm M3 (was PCD 22 mm M2.5) per Maxon GP 32 HP cat 166940.
+//   - #14: comment was "4× M3 mount holes to palm" but param is M2.5;
+//          resolved to M2.5 to match palm_mount_bolt_m.
 //
 // REFERENCE GEOMETRY — NOT VALIDATED BY PHYSICAL BUILD.
 
 include <hand_params.scad>;
 
 module motor_face_holes() {
+    // v0.1.1 fix #1/#3: 0/90/180/270 layout (was 45/135/225/315)
+    // to match the palm-side 0/90/180/270 layout — bracket and palm share
+    // the same angular pattern (different PCDs: motor face vs palm mount).
     for (i = [0 : 3]) {
-        rotate([0, 0, i * 90 + 45])
+        rotate([0, 0, i * 90])
             translate([motor_face_pcd/2, 0, -0.5])
                 cylinder(d=motor_face_bolt_dia,
                          h=20, $fn=$fn_hi);
@@ -65,13 +74,13 @@ module motor_bracket() {
         translate([0, 0, -0.5])
             cylinder(d=motor_shaft_clear_dia,
                      h=plate_t + 1, $fn=$fn_hi);
-        // Motor face holes (M2.5 PCD 22 — for face screws into Maxon GP 32 HP)
+        // Motor face holes (M3 PCD 27 — for face screws into Maxon GP 32 HP)
         motor_face_holes();
-        // Counterbore for motor face screws (M2.5 SHCS head ~4.5 mm dia)
+        // Counterbore for motor face screws (M3 SHCS head ~5.5 mm dia)
         for (i = [0 : 3]) {
-            rotate([0, 0, i * 90 + 45])
+            rotate([0, 0, i * 90])
                 translate([motor_face_pcd/2, 0, plate_t - 2.5])
-                    cylinder(d=4.6, h=3, $fn=$fn_lo);
+                    cylinder(d=5.6, h=3, $fn=$fn_lo);
         }
         // Palm mount holes (M2.5 PCD 25)
         palm_mount_holes(plate_t);
