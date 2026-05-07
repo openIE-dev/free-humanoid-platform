@@ -1,14 +1,14 @@
 ---
-title: Hand v0.1 — CAD Reference Stub
+title: Hand v0.1 — CAD References
 layout: default
 nav_order: 12
 permalink: /chassis/hand-v0.1-cad-references.html
 ---
 
-# Hand v0.1 — CAD Reference Stub
+# Hand v0.1 — CAD References
 {: .no_toc }
 
-> **REFERENCE document. Stub describing the CAD files to produce, not the CAD itself.** This file enumerates the mechanical CAD deliverables for the v0.1 hand subassembly: what they are, key dimensions, file format, and where they will live in the repo. The actual `.FCStd` / `.step` / `.dxf` files are the next deliverable in Phase 2 of the roadmap. See [`../ARCHITECTURE.md` §2.9](../ARCHITECTURE.md#29-manipulation), [`hand-v0.1-BOM.csv`](hand-v0.1-BOM.csv), and [`hand-v0.1-assembly.md`](hand-v0.1-assembly.md).
+> **REFERENCE document. v0.1 OpenSCAD parametric source has shipped (see [`cad/`](cad/)); FreeCAD `.FCStd` masters are the next deliverable.** This file pairs `hand-v0.1-BOM.csv` and `hand-v0.1-assembly.md` and points at the as-shipped CAD source plus the still-future FreeCAD deliverables. See [`../ARCHITECTURE.md` §2.9](../ARCHITECTURE.md#29-manipulation), [`hand-v0.1-BOM.csv`](hand-v0.1-BOM.csv), and [`hand-v0.1-assembly.md`](hand-v0.1-assembly.md).
 
 <details open markdown="block">
   <summary>Contents</summary>
@@ -23,16 +23,37 @@ permalink: /chassis/hand-v0.1-cad-references.html
 
 Per [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and the OpenLoco family pattern, all CAD source files **must be open-tool-readable**. The reference toolchain is:
 
-- **Source format:** FreeCAD 1.0+ `.FCStd`. Any contributor can install FreeCAD for free; commercial CAD imports lossily, FreeCAD is the lossless form.
+- **v0.1 source format (shipped):** OpenSCAD `.scad`. Text-based, version-controllable, agent-writable, deterministic, and free-tool-renderable. Lives under [`cad/`](cad/). See [`cad/README.md`](cad/README.md) for the parametric hierarchy and render commands.
+- **v0.1.1+ source format (planned):** FreeCAD 1.0+ `.FCStd`. Any contributor can install FreeCAD for free; commercial CAD imports lossily, FreeCAD is the lossless form. Will be authored once the first physical build feeds back dimension corrections.
 - **Exchange formats:** `.step` (AP242) for solid bodies, `.dxf` for 2D profiles, `.stl` for mesh-baked output (auto-generated from the descriptor + CAD by the OpenLoco bake pipeline; not source-of-truth).
 - **2D drawings:** PDF + the FreeCAD TechDraw source page that generated it.
 - **Drawing standards:** ANSI Y14.5-2018 GD&T for geometric tolerances. ISO 286-1 / 286-2 for shaft/hole fits and tolerance grades. Material call-outs per ASTM (aluminum, steel) or vendor-spec (PA12, silicone).
 
-Proprietary CAD source (SolidWorks `.SLDPRT`, Inventor `.IPT`, Fusion `.f3d`) is not accepted as primary; conversions are accepted only as a courtesy export alongside the `.FCStd` source.
+Proprietary CAD source (SolidWorks `.SLDPRT`, Inventor `.IPT`, Fusion `.f3d`) is not accepted as primary; conversions are accepted only as a courtesy export alongside the `.scad` / `.FCStd` source.
 
 ---
 
-## 1. Files to produce
+## 1. Files (v0.1 OpenSCAD — shipped)
+
+The v0.1 mechanical CAD source ships as parametric OpenSCAD under [`cad/`](cad/). All dimensions live in [`cad/hand_params.scad`](cad/hand_params.scad), cross-referenced inline to BOM lines. See [`cad/README.md`](cad/README.md) for the full parametric hierarchy.
+
+| File | Role |
+|---|---|
+| [`cad/hand_params.scad`](cad/hand_params.scad)       | Single-source-of-truth dimensions, fits, materials |
+| [`cad/phalanx.scad`](cad/phalanx.scad)               | Single phalanx primitive (joint barrels, tendon channel, spring pocket) |
+| [`cad/finger.scad`](cad/finger.scad)                 | 3-phalanx finger / 2-phalanx thumb composition |
+| [`cad/pulley.scad`](cad/pulley.scad)                 | Generic flanged pulley primitive (instantiated 12× per BOM) |
+| [`cad/spool.scad`](cad/spool.scad)                   | Single-tendon synergy spool + multi-tendon variant |
+| [`cad/palm.scad`](cad/palm.scad)                     | Palm chassis: finger mounts, pulley axles, motor iface, load-cell cavity, wrist iface |
+| [`cad/motor_bracket.scad`](cad/motor_bracket.scad)   | Aluminum 6061 motor mount (Maxon GP 32 HP face → palm) |
+| [`cad/skin_mold.scad`](cad/skin_mold.scad)           | Two-part silicone mold for the hand-skin cast |
+| [`cad/hand_assembly.scad`](cad/hand_assembly.scad)   | Top-level assembly with `view_mode` parameter (assembled / exploded / skeleton / mold) |
+
+Render commands and known best-guess dimensions are documented in [`cad/README.md`](cad/README.md).
+
+---
+
+## 1bis. Files to produce (v0.1.1 FreeCAD — future)
 
 ### 1.1 Skeleton main body — `cad/hand/skeleton-palm.FCStd`
 
