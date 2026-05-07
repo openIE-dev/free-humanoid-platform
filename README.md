@@ -1,8 +1,8 @@
 # Free Humanoid Platform
 
-**An open hardware, open firmware, open data humanoid robot reference design — the seventeenth morphology in the [OpenLoco](https://openie-dev.github.io/openloco/) ecosystem and the first humanoid expressed in the OpenLoco Unified Descriptor Document (UDD) format. Shielded by the [Free Humanoid Corpus](https://github.com/openIE-dev/free-humanoid-corpus), a 181-entry public-domain prior art commons.**
+**An open hardware, open firmware, open data humanoid robot reference design — the seventeenth morphology in the [OpenLoco](https://openie-dev.github.io/openloco/) ecosystem and the first humanoid expressed in the OpenLoco Unified Descriptor Document (UDD) format. Shielded by the [Free Humanoid Corpus](https://github.com/openIE-dev/free-humanoid-corpus), a 230-entry public-domain prior art commons.**
 
-> Status: scaffold (v0.0). This repository establishes the project's positioning, governance, and architectural option space. It is not yet a buildable robot. Load-bearing engineering decisions are explicitly flagged as TBD throughout, with the prior-art-supported option space documented for each.
+> Status: scaffold (v0.1). This repository establishes the project's positioning, governance, and architectural commitments. It is not yet a buildable robot. The ten load-bearing architectural decisions are resolved in [ARCHITECTURE.md §9](ARCHITECTURE.md#9-architectural-commitments); each commitment is shielded by a corpus-cited prior-art chain. Detailed CAD, vendor-pinned BOM, and physical-build documentation are the next deliverables.
 
 ---
 
@@ -107,10 +107,10 @@ free-humanoid-platform/
   README.md                  this file — positioning, governance, license posture
   ARCHITECTURE.md            the canonical full-system spec, prior-art-cited
   CONTRIBUTING.md            quality bar, defensive-publication norms
-  LICENSE-HARDWARE           CERN-OHL-S 2.0 header (canonical text TBD)
-  LICENSE-SOFTWARE           Apache-2.0 header (canonical text TBD)
-  LICENSE-DOCS               CC-BY-SA-4.0 header (canonical text TBD)
-  LICENSE-DATA               CC0-1.0 header (canonical text TBD)
+  LICENSE-HARDWARE           CERN-OHL-S 2.0 (canonical text inlined)
+  LICENSE-SOFTWARE           Apache-2.0 (canonical text inlined)
+  LICENSE-DOCS               CC-BY-SA-4.0 (canonical text inlined)
+  LICENSE-DATA               CC0-1.0 (canonical text inlined)
 
   descriptor/                UDD descriptor — the source of truth
     free-humanoid.udd.json   OpenLoco-compliant humanoid_bipedal descriptor
@@ -144,4 +144,4 @@ Each subdirectory has its own README.md scoped to its concern.
 
 ## Status and roadmap
 
-See [ARCHITECTURE.md §10](ARCHITECTURE.md) for the roadmap. Current state is **scaffold (v0.0)**: the project's shape is defined, the option space is mapped, and load-bearing engineering decisions are flagged for the user (David) to make as architectural calls.
+See [ARCHITECTURE.md §6](ARCHITECTURE.md#6-roadmap) for the roadmap. Current state is **scaffold (v0.1)**: the project's shape, governance, and ten architectural commitments are in place, each commitment shielded by a corpus prior-art chain. Detailed mechanical CAD and a vendor-pinned BOM are Phase 1 deliverables.
