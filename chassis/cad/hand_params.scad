@@ -20,6 +20,15 @@ $fn_hi = 96;   // hi-res for export
 $fn    = $fn_lo;
 
 // --------------------------------------------------------------------------
+// 0a. Parametric invariants (v0.1.2 fix #30)
+//    These assertions catch future-edit regressions on the relationships
+//    between the part-level dimensions. They run at file-include time —
+//    if any constraint is violated, OpenSCAD halts before rendering.
+// --------------------------------------------------------------------------
+// Assertions defined later in this file because they reference parameters
+// declared below. See "Invariant assertions" block at the bottom.
+
+// --------------------------------------------------------------------------
 // 1. Phalanx envelope dimensions
 //    Anatomical proxies for first build; tune to physical CAD later.
 //    NOTE: real human phalanx lengths follow a ~0.6 ratio chain
@@ -86,7 +95,21 @@ tendon_dia          = 1.5;     // mm — nominal cable dia
 tendon_hole_dia     = 1.6;     // mm — through-hole for tendon (slip)
 tendon_channel_w    = 4.0;     // mm — palm channel slot width
 tendon_channel_d    = 2.0;     // mm — palm channel slot depth
-tendon_min_bend_r   = 8.0;     // mm — 8x cable dia (Samson spec safety margin)
+// v0.1.2 fix #23: tendon_min_bend_r relaxed from 8.0 → 4.0 mm to match the
+// as-built BOM (Misumi MBPB8-3-2 8 mm OD pulleys give a 4 mm centerline
+// bend radius, half of the 8x-cable-dia safety figure originally declared).
+//
+// Trade: per Samson AmSteel-Blue cycle-life data, a 5:1 sheave-OD/cable-OD
+// ratio is the recommended fatigue-resistant minimum; 2:1 is the absolute
+// minimum at significantly reduced cycle life. Our 8 mm OD pulley / 1.5 mm
+// cable gives a 5.3:1 ratio — at the edge of the recommended envelope, so
+// pulley wear and cable abrasion will be the first wear modes to surface
+// in the runbook Stage 6 cycle test. If the cycle test reports cable
+// abrasion before 10⁴ flex cycles, v0.2 should upsize pulleys to Ø16 mm
+// (and re-check that 16 mm pulleys + 5 MCP redirects fit the palm cavity
+// — likely tight; palm_thickness 30 mm accommodates only ~Ø14 mm pulleys
+// without dorsal/palmar collision).
+tendon_min_bend_r   = 4.0;     // mm — empirical (matches Ø8 mm pulley); see fix #23
 
 // --------------------------------------------------------------------------
 // 4. Pulleys & spool
@@ -162,7 +185,11 @@ motor_stack_length    = 70.0;       // mm — combined motor + planetary head
 palm_length    = 90.0;     // mm — overall palm long-axis
 palm_width     = 75.0;     // mm — overall palm width
 palm_thickness = 30.0;     // mm — dorsal-palmar
-palm_finger_count = 5;
+// v0.1.2 fix #25: renamed palm_finger_count → palm_non_thumb_count for clarity.
+// finger_mcp_x has 4 entries (index, middle, ring, pinky); the thumb is
+// iterated separately via thumb_cmc_block(). Count value stayed at 5 (the old
+// name) but counted thumb-included; new name counts thumb-excluded = 4.
+palm_non_thumb_count = 4;
 
 // Finger MCP attachment offsets along palm distal edge (anatomical proxy):
 //   index, middle, ring, pinky equally spaced; thumb opposed.
@@ -235,5 +262,41 @@ VIEW_MOLD      = 3;
 // • spring_pocket_dia and spring_pocket_length are clearance estimates;
 //   confirm against Lee Spring LTR-040A-04S free-state geometry.
 // • loadcell_cavity_l/w/h are placeholders; verify Phidgets CZL635 datasheet.
-// • palm_finger_count == 5 but finger_mcp_x has 4 entries (thumb separate).
-//   palm.scad iterates fingers and thumb separately.
+// • palm_non_thumb_count == 4 matches finger_mcp_x's 4 entries; thumb is
+//   iterated separately by thumb_cmc_block() in palm.scad. (Renamed from
+//   the original palm_finger_count == 5 in v0.1.2 fix #25.)
+
+// --------------------------------------------------------------------------
+// 13. Invariant assertions (v0.1.2 fix #30)
+//    Catch future-edit regressions on parametric relationships. Each
+//    assertion fires at file-include time if violated.
+// --------------------------------------------------------------------------
+assert(bushing_id >= axle_dia,
+       "bushing_id must be >= axle_dia: axle has to fit through bushing");
+assert(bushing_od < joint_barrel_od,
+       "bushing_od must be < joint_barrel_od: bushing has to fit inside the joint hub");
+assert(bushing_flange_od < joint_barrel_od,
+       "bushing_flange_od must be < joint_barrel_od: flange must seat inside the barrel face");
+assert(2 * bushing_length <= joint_barrel_length,
+       "joint_barrel_length must accept two bushings end-to-end (2 * bushing_length)");
+assert(spool_bore < spool_od,
+       "spool_bore must be < spool_od: shaft has to fit inside the spool");
+assert(pulley_id >= axle_dia,
+       "pulley_id must be >= axle_dia: pulleys ride on the same dowel as the joint axle");
+assert(tendon_hole_dia >= tendon_dia,
+       "tendon_hole_dia must be >= tendon_dia: cable must fit through the channel");
+assert(spring_pocket_dia > spring_od,
+       "spring_pocket_dia must exceed spring_od (clearance fit)");
+assert(magnet_pocket_dia >= 6.0,
+       "magnet_pocket_dia must be at least 6.0 mm (AS5048A diametric magnet 6 mm OD)");
+// v0.1.2 fix #23: pulley_od / 2 = 4 mm = tendon_min_bend_r (relaxed from 8).
+// This assertion documents that constraint — if pulley_od ever drops, the
+// bend radius constraint must be revisited.
+assert(pulley_od >= 2 * tendon_min_bend_r,
+       "pulley_od must be >= 2 * tendon_min_bend_r (centerline bend radius >= declared min)");
+// Skin/mold sanity
+assert(skin_thickness > 0 && skin_thickness < palm_thickness/4,
+       "skin_thickness must be positive and well under palm_thickness");
+// Wrist key vs bolt PCD: the keying pin must sit outside the bolt PCD.
+assert(wrist_iface_key_pcd > wrist_iface_pcd,
+       "wrist_iface_key_pcd must exceed wrist_iface_pcd (key sits outside bolt circle)");

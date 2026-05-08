@@ -176,3 +176,13 @@ exit 0
 This is a static parse + UDD-import check, not a CSG → B-Rep render. The OpenSCAD render step in the build runbook §3.2 is still required for STL generation. CSG evaluation through openie-cad's kernel is on the roadmap for cad.openie.dev; once exposed, it will replace the OpenSCAD render step.
 
 The verifier itself lives at [openie-cad/crates/cad-interop/examples/check_openscad.rs](https://github.com/openIE-dev/openie-cad/blob/main/crates/cad-interop/examples/check_openscad.rs). Re-run before any future CAD edit.
+
+---
+
+## v0.1.2 update — 2026-05-07
+
+Deferred audit items #12, #13, #15, #16, #17, #23 addressed in
+chassis/hand-v0.1.2-fixes.md. Together with v0.1.1, the original v0.1
+audit (chassis/hand-v0.1-cad-audit.md) is now substantially closed —
+remaining work is empirical (validated only by physical build per the
+runbook).

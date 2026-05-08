@@ -135,6 +135,14 @@ module phalanx(length=proximal_length,
         // (-(height/2 - 1) on the palmar side), so the channel does NOT clip
         // through the barrel/bushing/axle bore. Plus a small dorsal-palmar
         // reroute segment at each joint to guide the tendon under the barrel.
+        // v0.1.2 fix #26: assert that the offset distance leaves wall material
+        // outside the channel. Channel sits at z = ±(height/2 - 1) with cable
+        // dia 1.6 mm; we need at least 0.5 mm wall outboard, so height/2 - 1
+        // must be ≥ tendon_hole_dia/2 + 0.5 → height ≥ 2*1.8 = 3.6 mm.
+        // Current min phalanx height is distal_height = 14 mm — well above.
+        // Guard fires only if a future tune drops a phalanx below ~4 mm thick.
+        assert(height >= 2 * (tendon_hole_dia/2 + 0.5 + 1),
+               "phalanx height too small for tendon-channel offset (height/2 - 1 must clear tendon_hole_dia/2)");
         side_offset = (tendon_side == "palmar") ? -1 : 1;
         z_main = side_offset * (height/2 - 1);
         // Main palmar/dorsal channel along X (full length)

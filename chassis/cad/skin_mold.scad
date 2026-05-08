@@ -13,6 +13,41 @@
 //   - 1× wrist pour port
 //   - vent holes at fingertip cavities
 //   - thumbscrew bolt-down clamp bosses
+//   - v0.1.2 fix #17: 1× skeleton-registration peg (3 mm × 3 mm square)
+//     at the wrist coupler, engaging a captive square hole in the bottom
+//     mold half. Indexes the skeleton to the bottom mold half so the
+//     skeleton cannot drift during silicone pour.
+//
+// ---------------------------------------------------------------------------
+// v0.1.2 fix #16 — STATUS OF THIS FILE
+// ---------------------------------------------------------------------------
+// hand_envelope_proxy() below is a v0.1.x INTERMEDIATE. The dorsal knuckles,
+// palmar tendon-routing bumps, thumb CMC angle, and finger-base convergence
+// are NOT represented — the proxy uses rounded-rectangular palm + capsule
+// fingers as a stand-in. Cast skin made from this mold will fit loosely on
+// dorsal knuckles and tightly at palmar tendon-channel ridges.
+//
+// v0.2 plan: regenerate hand_envelope_proxy() from
+//
+//     minkowski(<skeleton_union>, sphere(skin_thickness))
+//
+// over the assembled skeleton. TODO list for v0.2:
+//   1. Render hand_assembly.scad in VIEW_SKELETON mode and export the
+//      union STL (about 1 MB; skeleton_only() module already in place).
+//   2. Run minkowski externally (OpenSCAD's built-in minkowski on dense
+//      unions can take 10+ minutes — practical workflow is to import
+//      the skeleton STL and run a CGAL/Manifold minkowski offline,
+//      then re-import the offset surface as the mold cavity).
+//   3. Replace hand_envelope_proxy() with import("skeleton_offset.stl").
+//   4. Re-cut the alignment-peg captive hole position once the
+//      skeleton-derived envelope shifts the wrist face.
+//
+// Held in v0.1.x because: (a) the v0.1 mold is needed only for the
+// initial cast-skin Stage 6 build, where dimensional accuracy at the
+// dorsal knuckle is not critical for the runbook test; and (b) doing
+// this rebuild in OpenSCAD natively risks hours-long renders that block
+// other CAD iteration. The minkowski rebuild is a v0.2 first-class task.
+// ---------------------------------------------------------------------------
 //
 // REFERENCE GEOMETRY — NOT VALIDATED BY PHYSICAL BUILD.
 
@@ -98,6 +133,32 @@ module fingertip_vents() {
         cylinder(d=mold_vent_dia, h=20, $fn=$fn_lo);
 }
 
+// v0.1.2 fix #17: skeleton-registration features.
+// A 3 mm × 3 mm square peg projecting from the wrist-coupler face of the
+// palm engages a captive square hole in the bottom mold half. With the
+// alignment_pins() pegs registering top↔bottom mold halves, this feature
+// registers skeleton↔bottom-mold so the skeleton cannot drift laterally
+// during silicone pour. (Vertical registration comes from the skeleton
+// resting on the bottom mold cavity floor.)
+//
+// The peg itself is a feature on the printed palm (palm.scad's wrist face)
+// — see assembly.md §6 for installation. This module renders only the
+// captive hole in the bottom mold half.
+skeleton_reg_peg_w   = 3.0;   // mm — square peg side
+skeleton_reg_peg_h   = 4.0;   // mm — peg projection length
+skeleton_reg_peg_clr = 0.2;   // mm — clearance per side in mold hole
+
+module skeleton_registration_hole() {
+    // Position: at the wrist-coupler centerline, projecting into the
+    // bottom mold half along -Y (proximal direction).
+    translate([0, -palm_length/2 - 2, -palm_thickness/4])
+        rotate([90, 0, 0])
+            cube([skeleton_reg_peg_w + 2*skeleton_reg_peg_clr,
+                  skeleton_reg_peg_w + 2*skeleton_reg_peg_clr,
+                  skeleton_reg_peg_h + 2],
+                 center=true);
+}
+
 module clamp_bolts() {
     bx = palm_width + 60;
     by = palm_length + (proximal_length+middle_length+distal_length) + 60;
@@ -148,6 +209,9 @@ module mold_bottom() {
         pour_port();
         fingertip_vents();
         clamp_bolts();
+        // v0.1.2 fix #17: captive hole receives the skeleton registration peg
+        // (which is a 3 mm square peg printed on the palm wrist face).
+        skeleton_registration_hole();
     }
 }
 

@@ -153,6 +153,22 @@ module wrist_interface() {
         }
 }
 
+// v0.1.2 fix #17: skeleton-registration peg.
+// A 3 mm × 3 mm square peg projecting along -Y from the wrist face,
+// offset palmar (-Z from palm centerline) so it cannot collide with the
+// wrist flange bolt circle. Engages a captive square hole in the bottom
+// half of the silicone mold (skin_mold.scad's skeleton_registration_hole)
+// so the skeleton cannot drift laterally during the silicone pour.
+// Removed in the rendered hand-only assembly view (it sits below the
+// wrist flange, where the forearm coupler does not interfere).
+module skeleton_alignment_peg() {
+    peg_w = 3.0;   // mm — must match skin_mold.scad skeleton_reg_peg_w
+    peg_h = 4.0;   // mm — must match skin_mold.scad skeleton_reg_peg_h
+    translate([0, -palm_length/2 - peg_h/2, palm_thickness/4])
+        rotate([90, 0, 0])
+            cube([peg_w, peg_w, peg_h], center=true);
+}
+
 // v0.1.1 fix #9: loadcell_cavity removed — Phidgets CZL635 load cell relocated
 // to the forearm-side adjacent to the Moteus n1 (per assembly.md §5.4 forearm
 // mounting). The forearm bracket housing the load cell is a forearm-subassembly
@@ -188,6 +204,63 @@ module pulley_axle_hole(x, y) {
 //   - p1, p2: distribution junction, where the single tendon branches to the
 //             5 sub-paths headed for each MCP redirect pulley
 // Coordinates in palm frame (y positive = distal, x = lateral).
+//
+// ---------------------------------------------------------------------------
+// v0.1.2 fix #12 — tendon routing topology (validated)
+// ---------------------------------------------------------------------------
+// Total routing positions: 9 = 1 spool + 3 in-palm pulleys + 5 MCP redirects.
+// (BOM line 17 ships 12 PEEK pulleys: 9 used + 3 spares.)
+//
+// Path topology (from motor outward):
+//
+//   spool (0, -27, ~12)              motor output, palm proximal
+//        │
+//        ▼  ~15 mm cable run, dorsal-palmar transition
+//   p0 (0, -15)                       spool exit pulley (turns axis from
+//        │                            dorsal-palmar wind into palmar plane)
+//        ▼  ~22 mm cable run, palm distribution channel (cube cut, fix #13)
+//   distribution junction at (0, +5):
+//        ├── p1 (-12, +5) ──→ to ulnar fingers (ring + pinky)
+//        └── p2 (+12, +5) ──→ to radial fingers (index + middle) and thumb
+//
+//   from p1 / p2:
+//        ├── MCP_index   at (-30, +37) via p2  (37 mm reach, ~25° wrap)
+//        ├── MCP_middle  at (-10, +37) via p2  (32 mm reach, ~12° wrap)
+//        ├── MCP_ring    at (+10, +37) via p1  (32 mm reach, ~12° wrap)
+//        ├── MCP_pinky   at (+30, +37) via p1  (37 mm reach, ~25° wrap)
+//        └── MCP_thumb   at (thumb_cmc_x-8, thumb_cmc_y+8) via p2 (~30 mm)
+//
+//   from each MCP redirect (5 pulleys), cable enters its finger's palmar
+//   tendon channel (phalanx.scad tendon hole) and terminates at the distal
+//   phalanx via the figure-8 knot in terminator_anchor()-equivalent inside
+//   the distal phalanx. (Synergy variant; v0.2 will move terminators to
+//   the distal phalanx and remove the palm-side terminator.)
+//
+// Geometric validation (manual, against palm_length=90, palm_width=75):
+//   - spool (0, -27) to p0 (0, -15): 12 mm, straight palmar wrap, no
+//     collision with motor mount (motor mount center at (0, -27),
+//     motor_shaft_clear_dia = 11 mm → 5.5 mm clearance radius; p0 sits
+//     12 mm distal of motor center, 6.5 mm clear of motor envelope).
+//   - p0 (0, -15) to p1 (-12, +5): 23.3 mm, ~31° lateral deflection.
+//   - p0 (0, -15) to p2 (+12, +5): 23.3 mm, ~31° lateral deflection.
+//     (Both branches enter their distribution pulley with wrap angle in
+//     spec [≥ 20°, ≤ 60°] for cable seating.)
+//   - p1, p2 → 5 MCP redirects: max reach 37 mm; min reach 30 mm. All paths
+//     remain clear of the palm hollow inner wall (palm_wall_t = 3.5 mm)
+//     and the load-cell-relocation now-empty zone.
+//
+// Bend radii: all pulleys use pulley_od = 8 mm → 4 mm centerline bend
+// radius. This is below the declared tendon_min_bend_r = 8 mm in v0.1.1;
+// see v0.1.2 fix #23 (tendon_min_bend_r relaxed to 4 mm with cycle-life
+// trade documented in hand_params.scad).
+//
+// Open path-validation question (v0.1.3): the distribution junction (p1,
+// p2) treats the synergy split as two-output, but assembly.md §4.2 step 3
+// describes a Pisa-IIT-style central distribution drum. This file's
+// 2-pulley junction is a simplification; a true distribution drum lives
+// inside the palm hollow on a vertical axle. Defer to v0.1.3 once the
+// distribution drum's geometry is specced.
+// ---------------------------------------------------------------------------
 palm_pulley_positions = [
     [0,    -palm_length/2 + 30, 0],   // p0 — spool exit (8 mm beyond motor center y=-27)
     [-12,  -palm_length/2 + 50, 0],   // p1 — left branch of distribution junction
@@ -222,14 +295,22 @@ module palm() {
             thumb_cmc_block();
             // wrist flange
             wrist_interface();
+            // v0.1.2 fix #17: 3×3 mm registration peg at wrist (engages
+            // captive hole in bottom mold half during skin-pour Stage 6).
+            skeleton_alignment_peg();
         }
         // cavity for routing
         palm_hollow();
         // motor mount interface (back of palm)
         motor_mount_iface();
         // tendon central distribution channel
-        translate([0, 0, palm_thickness/2])
-            cube([tendon_channel_w, palm_length, tendon_channel_d],
+        // v0.1.2 fix #13: channel length limited to the actual cable run from
+        // spool exit (y = -palm_length/2 + 30 ≈ -15) to the distribution
+        // junction (y = -palm_length/2 + 50 ≈ +5). ~30 mm long centered at
+        // y = -5. Previously a full-palm-length 90 mm slot — that weakened
+        // the dorsal/palmar split for ~60 mm of unused channel.
+        translate([0, -palm_length/2 + 40, palm_thickness/2])
+            cube([tendon_channel_w, 30, tendon_channel_d],
                  center=true);
         // pulley axle holes (3 routing-driven positions; v0.1.1 fix #4)
         palm_pulley_mounts();

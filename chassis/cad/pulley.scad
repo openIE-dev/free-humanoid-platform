@@ -8,6 +8,11 @@
 // suited to UHMWPE / Spectra cable. Used by palm.scad to instantiate the
 // 12 PEEK pulleys called out in the BOM (Misumi MBPB8-3-2).
 //
+// v0.1.2 fix #15: flange thickness 0.6 → 1.0 mm to match the Misumi MBPB8-3-2
+// datasheet (4 mm total = two 1 mm flanges + 2 mm groove body). Earlier 0.6 mm
+// flanges left the cable seated against an under-spec flange wall and risked
+// pop-off under wrap-angle stress.
+//
 // REFERENCE GEOMETRY — NOT VALIDATED BY PHYSICAL BUILD.
 
 include <hand_params.scad>;
@@ -18,17 +23,19 @@ module pulley(od           = pulley_od,
               side_groove_radius = pulley_groove_r,
               flange_od    = pulley_flange_od)
 {
+    // v0.1.2 fix #15: flange thickness now 1.0 mm (was 0.6 mm).
+    flange_t = 1.0;
     difference() {
         union() {
             // Two flanges separated by the body
             // bottom flange
-            cylinder(d=flange_od, h=0.6, $fn=$fn_hi);
+            cylinder(d=flange_od, h=flange_t, $fn=$fn_hi);
             // body
-            translate([0, 0, 0.6])
-                cylinder(d=od, h=height - 1.2, $fn=$fn_hi);
+            translate([0, 0, flange_t])
+                cylinder(d=od, h=height - 2*flange_t, $fn=$fn_hi);
             // top flange
-            translate([0, 0, height - 0.6])
-                cylinder(d=flange_od, h=0.6, $fn=$fn_hi);
+            translate([0, 0, height - flange_t])
+                cylinder(d=flange_od, h=flange_t, $fn=$fn_hi);
         }
         // Bore
         translate([0, 0, -0.5])
